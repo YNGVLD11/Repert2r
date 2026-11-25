@@ -1,0 +1,27 @@
+{
+  "name": "repert2r",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "scripts": {
+    "prepare:assets": "node scripts/copy-processor.mjs",
+    "predev": "npm run prepare:assets",
+    "dev:vite": "vite",
+    "dev": "tauri dev",
+    "prebuild": "npm run prepare:assets",
+    "build": "vite build",
+    "tauri": "tauri",
+    "dist": "tauri build"
+  },
+  "dependencies": {
+    "@breezystack/lamejs": "^1.2.7",
+    "@soundtouchjs/audio-worklet": "^2.1.1",
+    "@tauri-apps/api": "^2.12.5",
+    "@tauri-apps/plugin-dialog": "^2.8.4",
+    "@tauri-apps/plugin-fs": "^2.7.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.6",
+    "vite": "^8.3.8"
+  }
+}

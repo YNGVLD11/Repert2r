@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Repert2r</title>
+  </head>
+  <body>
+    <div id="app">
+      <aside id="sidebar" class="sidebar">
+        <div class="sidebar-head">
+          <span class="sidebar-title">Хранилище</span>
+          <div class="sidebar-actions">
+            <button id="lib-add" class="icon-btn small" type="button" title="Добавить треки">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
+            </button>
+            <div class="sort-wrap">
+              <button id="lib-sort-btn" class="icon-btn small" type="button" title="Сортировка">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h12M3 12h8M3 17h5" /><path d="M17 7v10m0 0l-3-3m3 3l3-3" /></svg>
+              </button>
+              <div id="lib-sort-menu" class="sort-menu" hidden>
+                <button type="button" data-sort="name">По названию</button>
+                <button type="button" data-sort="date">По дате изменения</button>
+                <div class="menu-sep"></div>
+                <button type="button" data-dir="asc">По возрастанию</button>
+                <button type="button" data-dir="desc">По убыванию</button>
+              </div>
+            </div>
+            <button id="lib-collapse" class="icon-btn small" type="button" title="Свернуть хранилище">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6" /></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-search">
+          <input id="lib-search" type="search" placeholder="Поиск…" autocomplete="off" spellcheck="false" />
+        </div>
+
+        <div id="lib-list" class="lib-list"></div>
+        <div id="lib-empty" class="lib-empty">Перетащите аудиофайлы или нажмите +</div>
+      </aside>
+
+      <div class="workspace">
+      <main id="stage" class="stage">
+        <div class="stage-header">
+          <div class="stage-top-left">
+            <button id="lib-expand" class="icon-btn small" type="button" title="Открыть хранилище" hidden>
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+            </button>
+            <div id="track-info" class="track-info" hidden>
+              <span id="info-name" class="info-name"></span>
+              <span class="info-sep">·</span>
+              <span id="info-key" class="info-meta">—</span>
+              <span class="info-sep">·</span>
+              <span id="info-bpm" class="info-meta">— BPM</span>
+            </div>
+          </div>
+
+          <div class="stage-top-right">
+            <button id="help-btn" class="help-btn" type="button" title="Горячие клавиши">?</button>
+            <button id="right-expand" class="icon-btn small right-expand" type="button" title="Открыть модули" hidden>
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6" /></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="stage-center">
+
+        <div id="empty" class="empty">
+          <svg viewBox="0 0 24 24" width="62" height="62" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5" />
+            <path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4" />
+          </svg>
+        </div>
+
+        <div id="tuner-row" class="tuner-row" hidden>
+          <div id="tuner" class="module-card tuner-card">
+            <div class="card-head">
+              <span class="card-title">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg>
+                Тональность
+              </span>
+            </div>
+            <div class="card-controls">
+              <button id="down" class="step" type="button" title="−1">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M5 12h14" /></svg>
+              </button>
+              <div class="tuner-readout">
+                <span id="semitones" class="semitones">0</span>
+                <span id="key" class="key">C</span>
+              </div>
+              <button id="up" class="step" type="button" title="+1">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
+              </button>
+              <button id="key-reset" class="card-reset" type="button" disabled>Сбросить</button>
+            </div>
+          </div>
+
+          <div class="module-card tempo-card">
+            <div class="card-head">
+              <span class="card-title">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l6 17H6L12 3z" /><path d="M12 15l4-7" /></svg>
+                BPM
+              </span>
+            </div>
+            <div class="card-controls">
+              <button id="bpm-down" class="step" type="button" title="−1 BPM">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M5 12h14" /></svg>
+              </button>
+              <span id="bpm-value" class="bpm-value">120 BPM</span>
+              <button id="bpm-up" class="step" type="button" title="+1 BPM">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
+              </button>
+              <button id="bpm-reset" class="card-reset" type="button" disabled>Сбросить</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="eq-wrap" class="module-card eq-wrap" hidden>
+          <div class="card-head">
+            <span class="card-title">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6" /></svg>
+              Эквалайзер
+            </span>
+            <button id="eq-reset" class="card-reset" type="button" title="Сбросить эквалайзер" disabled>
+              Сбросить
+            </button>
+          </div>
+          <div id="eq-board" class="eq-board">
+            <canvas id="eq-wave" class="eq-wave"></canvas>
+            <svg id="eq-svg" class="eq-svg" viewBox="0 0 560 190" preserveAspectRatio="none"></svg>
+          </div>
+        </div>
+
+        <div id="minus-view" class="minus-view" hidden>
+          <div id="sep-idle" class="minus-idle">
+            <button id="separate-btn" class="big-sep-btn" type="button" disabled>
+              Отделить вокал от музыки
+            </button>
+            <div class="minus-hint">Локальная нейросеть MDX-Net разделит трек на вокал и инструментал</div>
+          </div>
+
+          <div id="sep-progress" class="minus-progress" hidden>
+            <div id="sep-label" class="export-label">Извлечение… 0%</div>
+            <div class="export-bar">
+              <div id="sep-fill" class="export-fill"></div>
+            </div>
+          </div>
+
+          <div id="stems-card" class="module-card big-stems-card" hidden>
+            <div class="card-head">
+              <span class="card-title">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><line x1="12" y1="19" x2="12" y2="22" /></svg>
+                Дорожки трека
+              </span>
+              <div class="stem-actions">
+                <button id="stem-minus" class="card-reset" type="button">Только минус</button>
+                <button id="stem-reset" class="card-reset" type="button">Сбросить</button>
+              </div>
+            </div>
+
+            <div class="big-stem-row">
+              <div class="big-stem-head">
+                <span>Вокал</span>
+                <span id="vocals-val" class="stem-val">100%</span>
+              </div>
+              <input id="vocals-range" class="big-stem-range" type="range" min="0" max="100" value="100" />
+            </div>
+
+            <div class="big-stem-row">
+              <div class="big-stem-head">
+                <span>Инструментал</span>
+                <span id="inst-val" class="stem-val">100%</span>
+              </div>
+              <input id="inst-range" class="big-stem-range" type="range" min="0" max="100" value="100" />
+            </div>
+          </div>
+        </div>
+
+        <div id="piano-view" class="piano-view" hidden>
+          <div class="module-card piano-card">
+            <div class="card-head piano-head">
+              <span class="card-title">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v9M15 4v9M7 13v7M12 13v7M17 13v7" /></svg>
+                Пианино
+              </span>
+
+              <div class="piano-toolbar">
+                <div class="piano-octaves">
+                  <button id="piano-oct-down" class="step tiny" type="button" title="Октава ниже">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M15 6l-6 6 6 6" /></svg>
+                  </button>
+                  <span id="piano-oct-label" class="piano-oct-label">C3 – B4</span>
+                  <button id="piano-oct-up" class="step tiny" type="button" title="Октава выше">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 6l6 6-6 6" /></svg>
+                  </button>
+                </div>
+
+                <label class="piano-scale-toggle">
+                  <input id="piano-scale-toggle" type="checkbox" checked />
+                  <span>Тональность</span>
+                </label>
+
+                <div class="piano-vol">
+                  <span id="piano-vol-val" class="piano-vol-val">75%</span>
+                  <input id="piano-vol" class="volume-range" type="range" min="0" max="100" value="75" />
+                </div>
+              </div>
+            </div>
+
+            <div id="piano-keys" class="piano-keys"></div>
+          </div>
+        </div>
+
+        <div id="export-box" class="export-box" hidden>
+          <div id="export-label" class="export-label">Конвертация… 0%</div>
+          <div class="export-bar">
+            <div id="export-fill" class="export-fill"></div>
+          </div>
+          <a id="reveal-folder" class="export-link" href="#" hidden>Открыть папку</a>
+        </div>
+
+        <div id="import-box" class="export-box" hidden>
+          <div id="import-label" class="export-label">Добавление треков… 0 / 0</div>
+          <div class="export-bar">
+            <div id="import-fill" class="export-fill"></div>
+          </div>
+        </div>
+        </div>
+
+        <div id="help-modal" class="help-modal" hidden>
+          <div class="help-card">
+            <div class="help-title">Горячие клавиши</div>
+            <div class="help-list">
+              <div class="help-row"><kbd>Space</kbd><span>Пауза / Воспроизведение</span></div>
+              <div class="help-row"><kbd>←</kbd> <kbd>→</kbd><span>Перемотка ±5 сек</span></div>
+              <div class="help-row"><kbd>↑</kbd> <kbd>↓</kbd><span>Тональность ±1 полутон</span></div>
+              <div class="help-row"><kbd>0</kbd><span>Сбросить тональность</span></div>
+              <div class="help-row"><kbd>M</kbd><span>Вкл / Выкл звук</span></div>
+              <div class="help-row"><kbd>R</kbd><span>В начало трека</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="confirm-modal" class="help-modal" hidden>
+          <div class="confirm-card">
+            <div class="confirm-text">Несохранённые изменения будут потеряны. Продолжить?</div>
+            <div class="confirm-actions">
+              <button id="confirm-cancel" class="eq-reset" type="button">Отмена</button>
+              <button id="confirm-ok" class="confirm-btn" type="button">Продолжить</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="props-modal" class="help-modal" hidden>
+          <div class="props-card">
+            <div class="props-head">
+              <span class="help-title">Свойства файла</span>
+              <button id="props-close" class="icon-btn small" type="button" title="Закрыть">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+              </button>
+            </div>
+            <div id="props-list" class="props-list"></div>
+          </div>
+        </div>
+      </main>
+
+      <footer id="player" class="player" hidden>
+        <div class="controls">
+          <button id="open" class="icon-btn" type="button" title="Открыть файл">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" /></svg>
+          </button>
+          <button id="restart" class="icon-btn" type="button" title="В начало">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.34-5.66" /><path d="M20 4v5h-5" /></svg>
+          </button>
+          <button id="playpause" class="icon-btn primary" type="button" title="Воспроизведение / пауза">
+            <svg id="play-icon" viewBox="0 0 24 24" width="19" height="19" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z" /></svg>
+            <svg id="pause-icon" viewBox="0 0 24 24" width="19" height="19" fill="currentColor" hidden><rect x="7" y="5.5" width="3.6" height="13" rx="0.6" /><rect x="13.4" y="5.5" width="3.6" height="13" rx="0.6" /></svg>
+          </button>
+          <button id="stop" class="icon-btn" type="button" title="Стоп">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="6.5" y="6.5" width="11" height="11" rx="1" /></svg>
+          </button>
+        </div>
+
+        <span id="current" class="time">0:00</span>
+        <input id="seek" class="seek" type="range" min="0" max="1000" value="0" />
+        <span id="duration" class="time">0:00</span>
+
+        <div class="speed-wrap">
+          <button id="speed" class="speed-btn" type="button" title="Скорость прослушивания">1x</button>
+          <div id="speed-menu" class="speed-menu" hidden>
+            <button type="button" data-speed="0.25">0.25x</button>
+            <button type="button" data-speed="0.5">0.5x</button>
+            <button type="button" data-speed="1">1x</button>
+            <button type="button" data-speed="1.5">1.5x</button>
+            <button type="button" data-speed="2">2x</button>
+          </div>
+        </div>
+
+        <div class="volume">
+          <button id="mute" class="icon-btn" type="button" title="Звук">
+            <svg id="volume-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5z" /><path d="M17 9a4 4 0 0 1 0 6" /></svg>
+            <svg id="mute-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" hidden><path d="M5 9v6h4l5 4V5L9 9H5z" /><path d="M17 9l4 6m0-6l-4 6" /></svg>
+          </button>
+          <input id="volume" class="volume-range" type="range" min="0" max="100" value="100" />
+        </div>
+
+        <div class="save-wrap">
+          <button id="save" class="save-btn" type="button">
+            Сохранить
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+          </button>
+          <div id="save-menu" class="save-menu" hidden>
+            <button type="button" data-ext="mp3">.mp3</button>
+            <button type="button" data-ext="wav">.wav</button>
+          </div>
+        </div>
+      </footer>
+      </div>
+
+      <aside id="right-panel" class="right-panel">
+        <div class="sidebar-head">
+          <span class="sidebar-title">Модули</span>
+          <button id="right-collapse" class="icon-btn small" type="button" title="Свернуть панель">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+          </button>
+        </div>
+
+        <div class="right-body">
+          <button id="nav-studio" class="nav-card active" type="button">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6" /></svg>
+            <div class="nav-card-text">
+              <span class="nav-card-title">Тон и эквалайзер</span>
+              <span class="nav-card-sub">Тональность, BPM, АЧХ</span>
+            </div>
+          </button>
+
+          <button id="nav-minus" class="nav-card" type="button">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><line x1="12" y1="19" x2="12" y2="22" /></svg>
+            <div class="nav-card-text">
+              <span class="nav-card-title">Отделить вокал от музыки</span>
+              <span class="nav-card-sub">Минусовка и громкость дорожек</span>
+            </div>
+          </button>
+
+          <button id="nav-piano" class="nav-card" type="button">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v9M15 4v9M7 13v7M12 13v7M17 13v7" /></svg>
+            <div class="nav-card-text">
+              <span class="nav-card-title">Пианино</span>
+              <span class="nav-card-sub">Распевка и подбор мелодии</span>
+            </div>
+          </button>
+        </div>
+      </aside>
+
+      <div id="lib-menu" class="lib-menu" hidden>
+        <button type="button" data-action="reveal">Открыть в папке</button>
+        <button type="button" data-action="rename">Переименовать</button>
+        <button type="button" data-action="props">Свойства</button>
+        <div class="menu-sep"></div>
+        <button type="button" class="danger" data-action="remove">Удалить из списка</button>
+      </div>
+
+      <input id="file" type="file" accept="audio/*" hidden />
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
